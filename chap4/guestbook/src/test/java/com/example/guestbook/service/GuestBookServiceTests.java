@@ -7,6 +7,7 @@ import com.example.guestbook.entity.Guestbook;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 public class GuestBookServiceTests {
@@ -44,6 +45,26 @@ public class GuestBookServiceTests {
         System.out.println("pageList--------------");
         for(Integer i : result.getPageList()){
             System.out.println(i);
+        }
+    }
+
+    @Transactional
+    @Test
+    public void removeTest(){
+        PageRequestDTO requestDTO = PageRequestDTO.builder()
+                .page(1)
+                .size(10)
+                .build();
+        PageResultDTO<GuestbookDTO, Guestbook> result = service.getList(requestDTO);
+        for(GuestbookDTO dto : result.getDtoList()){
+            System.out.println(dto);
+        }
+
+        service.remove(300L);
+
+        result = service.getList(requestDTO);
+        for(GuestbookDTO dto : result.getDtoList()){
+            System.out.println(dto);
         }
     }
 }

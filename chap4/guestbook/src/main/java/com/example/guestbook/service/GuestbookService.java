@@ -8,6 +8,9 @@ import com.example.guestbook.entity.Guestbook;
 public interface GuestbookService {
     Long register(GuestbookDTO dto);
     PageResultDTO<GuestbookDTO, Guestbook> getList(PageRequestDTO pageRequestDTO);
+    GuestbookDTO findById(Long gno);
+    void modify(GuestbookDTO dto);
+    void remove(Long gno);
     default Guestbook dtoToEntity(GuestbookDTO dto){
         Guestbook entity = Guestbook.builder()
                 .gno(dto.getGno())

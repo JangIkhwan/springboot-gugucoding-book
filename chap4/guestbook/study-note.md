@@ -55,3 +55,26 @@ compileQuerydsl {
 // 여기까지
 
 ```
+
+## 내가 구현해야할 기능들
+- 목록
+- 방명록 등록
+- 방명록 조회
+- 방명록 삭제
+- 방명록 수정
+- 검색 (목록, 조회, 수정)
+
+## api
+- /guestbook/list
+- /guestbook/read?gno= &page=
+- /guestbook/remove?gno= 
+- /guestbook/modify?gno= &page=
+- /guestbook/list?type= &keyword= : 검색 
+
+## jQuery를 이용해서 form의 전달 내용을 변경하는 방법
+
+- 참고: https://januaryman.tistory.com/205
+
+## RedirectAttributes를 이용해서 파라미터 전달하기
+
+- 참고 : https://mine-it-record.tistory.com/416

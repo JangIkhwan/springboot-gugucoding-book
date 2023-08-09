@@ -10,6 +10,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -26,12 +27,14 @@ public class GuestbookController {
         return "redirect:/guestbook/list";
     }
 
+    // 목록
     @GetMapping("/list")
     public void list(PageRequestDTO pageRequestDTO, Model model){
         log.info("list----------" + pageRequestDTO);
         model.addAttribute("result", service.getList(pageRequestDTO));
     }
 
+    // 등록
     @GetMapping("/register")
     public void register(){
         log.info("register-------");
@@ -48,5 +51,38 @@ public class GuestbookController {
         return "redirect:/guestbook/list";
     }
 
+    // 조회
+    @GetMapping({"/read", "/modify"})
+    public void read(Long gno, @ModelAttribute("requestDTO") PageRequestDTO requestDTO, Model model){
+        log.info("read------");
+
+        GuestbookDTO dto = service.findById(gno);
+        model.addAttribute("dto", dto);
+    }
+
+    // 수정
+    @PostMapping("/modify")
+    public String modify(GuestbookDTO dto, PageRequestDTO requestDTO, RedirectAttributes redirectAttributes){
+        log.info("modify post---------------");
+
+        service.modify(dto);
+
+        redirectAttributes.addAttribute("gno", dto.getGno());
+        redirectAttributes.addAttribute("page", requestDTO.getPage());
+
+        return "redirect:/guestbook/read";
+    }
+
+    // 삭제
+    @PostMapping("remove")
+    public String remove(Long gno, RedirectAttributes redirectAttributes){
+        log.info("remove-------------");
+
+        service.remove(gno);
+
+        redirectAttributes.addFlashAttribute("msg", gno);
+
+        return "redirect:/guestbook/list";
+    }
 }
 
