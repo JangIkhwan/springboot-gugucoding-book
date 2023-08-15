@@ -6,7 +6,10 @@
 
       <!-- 제목과 내용은 수정 가능하게 만듦 -->
     <form th:action="@{/guestbook/modify}" method="post">
+      <!--  검색에 필요한 정보를 폼태그에 저장한 후에 post메서드로 전송   -->
       <input type="hidden" name="page" th:value="${requestDTO.page}">
+      <input type="hidden" name="type" th:value="${requestDTO.type}">
+      <input type="hidden" name="keyword" th:value="${requestDTO.keyword}">
       <div class="form-group">
         <label>Gno</label>
         <input type="text" class="form-control" name="gno" th:value="${dto.gno}" readonly>
@@ -53,11 +56,16 @@
         actionForm.attr("action", "/guestbook/modify").attr("method", "post").submit();
       });
 
+       // 검색에 필요한 정보를 폼태그에 저장한 후에 post메서드로 전송
       $(".listBtn").click(function(){
         var page = $("input[name='page']");
+        var type = $("input[name='type']");
+        var keyword = $("input[name='keyword']");
 
         actionForm.empty();
         actionForm.append(page);
+        actionForm.append(type);
+        actionForm.append(keyword);
         actionForm.attr("action", "/guestbook/list").attr("method", "get");
         console.log(actionForm.html());
         actionForm.submit();

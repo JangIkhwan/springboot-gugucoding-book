@@ -67,8 +67,11 @@ public class GuestbookController {
 
         service.modify(dto);
 
+        // 리다이렉트 시 이전의 정보를 유지하기 위해서 애트리뷰트를 추가
         redirectAttributes.addAttribute("gno", dto.getGno());
         redirectAttributes.addAttribute("page", requestDTO.getPage());
+        redirectAttributes.addAttribute("type", requestDTO.getType());
+        redirectAttributes.addAttribute("keyword", requestDTO.getKeyword());
 
         return "redirect:/guestbook/read";
     }

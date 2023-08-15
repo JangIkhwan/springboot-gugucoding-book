@@ -4,7 +4,9 @@ import com.example.guestbook.dto.GuestbookDTO;
 import com.example.guestbook.dto.PageRequestDTO;
 import com.example.guestbook.dto.PageResultDTO;
 import com.example.guestbook.entity.Guestbook;
+import com.example.guestbook.entity.QGuestbook;
 import com.example.guestbook.repository.GuestbookRepository;
+import com.querydsl.core.BooleanBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
@@ -39,11 +41,40 @@ public class GuestbookServiceImpl implements GuestbookService{
     public PageResultDTO<GuestbookDTO, Guestbook> getList(PageRequestDTO pageRequestDTO){
         Pageable pageable = pageRequestDTO.getPageable(Sort.by("gno").descending());
 
-        Page<Guestbook> result = repository.findAll(pageable);
+        BooleanBuilder search = getSearch(pageRequestDTO);
+
+        Page<Guestbook> result = repository.findAll(search, pageable);
 
         Function<Guestbook, GuestbookDTO> fn = entity -> entityToDto(entity);
 
         return new PageResultDTO<> (result, fn);
+    }
+
+    public BooleanBuilder getSearch(PageRequestDTO requestDTO){
+        String type = requestDTO.getType();
+        String keyword = requestDTO.getKeyword();
+
+        BooleanBuilder builder = new BooleanBuilder();
+        QGuestbook qGuestbook = QGuestbook.guestbook;
+
+        builder.and(qGuestbook.gno.gt(0L));
+
+        if(type == null || keyword.trim().length() == 0){
+            return builder;
+        }
+
+        BooleanBuilder keywordCond = new BooleanBuilder();
+        if(type.contains("t")){
+            keywordCond.or(qGuestbook.title.contains(keyword));
+        }
+        if(type.contains("c")){
+            keywordCond.or(qGuestbook.content.contains(keyword));
+        }
+        if(type.contains("w")){
+            keywordCond.or(qGuestbook.writer.contains(keyword));
+        }
+
+        return builder.and(keywordCond);
     }
 
     @Override
