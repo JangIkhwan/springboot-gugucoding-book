@@ -3,9 +3,8 @@ package org.zerock.board.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
-import lombok.Data;
-import lombok.Generated;
 import lombok.Getter;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -15,11 +14,11 @@ import java.time.LocalDateTime;
 @EntityListeners(value = { AuditingEntityListener.class})
 @Getter
 abstract public class BaseEntity {
-    @Generated
-    @Column(name = "regdate", updatable = false)
-    private LocalDateTime regTime;
+    @CreatedDate
+    @Column(name = "regdate")
+    private LocalDateTime regDate;
 
     @LastModifiedDate
     @Column(name="moddate")
-    private LocalDateTime modTime;
+    private LocalDateTime modDate;
 }

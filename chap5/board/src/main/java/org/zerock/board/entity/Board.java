@@ -1,9 +1,6 @@
 package org.zerock.board.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
@@ -11,7 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@ToString
+@ToString(exclude="writer")
 public class Board extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,5 +17,6 @@ public class Board extends BaseEntity{
     private String title;
     
     //연관관계
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Member writer;
 }
