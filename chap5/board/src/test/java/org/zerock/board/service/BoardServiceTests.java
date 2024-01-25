@@ -13,6 +13,7 @@ import org.zerock.board.dto.PageResultDTO;
 public class BoardServiceTests {
     @Autowired
     private BoardService boardService;
+
     @Test
     public void testRegister(){
         BoardDTO boardDTO = BoardDTO.builder()
@@ -45,7 +46,19 @@ public class BoardServiceTests {
     }
 
     @Test
-    public void testDeleteWithReplies(){
-        
+    public void testRemove(){
+        Long bno = 1L;
+        boardService.removeWithReplies(bno);
+    }
+
+    @Test
+    public void testModify(){
+        BoardDTO boardDTO = BoardDTO.builder()
+                .bno(2L)
+                .title("change Title")
+                .content("change Content")
+                .build();
+
+        boardService.modify(boardDTO);
     }
 }

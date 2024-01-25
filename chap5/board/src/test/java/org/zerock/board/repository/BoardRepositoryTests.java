@@ -89,4 +89,15 @@ public class BoardRepositoryTests {
         System.out.println(Arrays.toString(arr));
     }
 
+    @Test
+    public void testSearch1(){
+        boardRepository.search1();
+    }
+
+    @Test
+    public void testSearchPages(){
+        boardRepository.searchPages("t", "1",
+                PageRequest.of(1, 10, Sort.by("bno").descending()));
+    }
+
 }

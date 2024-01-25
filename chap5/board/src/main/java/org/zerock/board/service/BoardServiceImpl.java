@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.zerock.board.dto.BoardDTO;
@@ -16,6 +17,8 @@ import org.zerock.board.entity.Member;
 import org.zerock.board.repository.BoardRepository;
 import org.zerock.board.repository.ReplyRepository;
 
+import java.util.Arrays;
+import java.util.Optional;
 import java.util.function.Function;
 
 @Service
@@ -55,13 +58,26 @@ public class BoardServiceImpl implements BoardService{
     @Override
     public BoardDTO get(Long bno) {
         Object result = boardRepository.getBoardByBno(bno);
-        Object[] en = (Object[]) result;
-        return entityToDto((Board) en[0], (Member) en[1], (Long) en[2]);
+        Object[] arr = (Object[]) result;
+
+        System.out.println("get....arr" + Arrays.toString(arr));
+        return entityToDto((Board)arr[0], (Member)arr[1], (Long)arr[2]);
+    }
+
+    @Transactional
+    @Override
+    public void modify(BoardDTO boardDTO) {
+        Board board = boardRepository.getReferenceById(boardDTO.getBno()); // getOne은 deprecated됨
+
+        board.changeTitle(boardDTO.getTitle());
+        board.changeContent(boardDTO.getContent());
+
+        boardRepository.save(board);
     }
 
     @Transactional // 삭제 작업은 트랜젝션으로 처리
     @Override
-    public void remove(Long bno) {
+    public void removeWithReplies(Long bno) {
         replyRepository.deleteByBno(bno);
         boardRepository.deleteById(bno);
     }
